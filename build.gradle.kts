@@ -1,6 +1,7 @@
 plugins {
     base
-    id("vb.build-logic")
+    eclipse
+	id("vb.build-logic")
 }
 
 allprojects {
