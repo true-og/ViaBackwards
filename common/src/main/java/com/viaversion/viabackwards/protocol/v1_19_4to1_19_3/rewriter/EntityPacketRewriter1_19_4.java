@@ -165,14 +165,10 @@ public final class EntityPacketRewriter1_19_4 extends EntityRewriter<Clientbound
             }
         });
 
-        protocol.registerClientbound(ClientboundPackets1_19_4.HURT_ANIMATION, ClientboundPackets1_19_3.ANIMATE, new PacketHandlers() {
-            @Override
-            public void register() {
-                map(Types.VAR_INT); // Entity id
-                read(Types.FLOAT); // Yaw
-                create(Types.UNSIGNED_BYTE, (short) 1); // Hit
-            }
-        });
+        // The damage event above already maps to entity status 2, a superset of animate 1 on all
+        // 1.8-1.19.3 clients; forwarding both re-flashes the hurt when latency splits the pair.
+        // Cancelling restores pre-1.19.4 wire parity but drops plugin-sent standalone hurt animations.
+        protocol.cancelClientbound(ClientboundPackets1_19_4.HURT_ANIMATION);
 
         protocol.registerClientbound(ClientboundPackets1_19_4.RESPAWN, new PacketHandlers() {
             @Override
